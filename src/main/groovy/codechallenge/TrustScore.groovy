@@ -14,31 +14,38 @@ class TrustScore {
 	def reviews = []
 	LambdaLogger logger
 
+	def starToNum = [0, 2.5, 5, 7.5, 10]
+
 	def int getDays(createdAt) {
-		DateFormat format
 
-		if(createdAt.length() == 20) {
-			format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-		} else {
-			format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+		try {
+			DateFormat format
+
+			if(createdAt.length() == 20) {
+				format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
+			} else {
+				format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+			}
+
+			def created = format.parse(createdAt)
+			def date = new Date()
+
+			def days = 0
+
+			use(groovy.time.TimeCategory) {
+				def duration = date - created
+				days = duration.days
+			}
+			return days
+		} catch (all) {
+			throw new Exception("Error parsing or calculating days since review.")
 		}
-
-		def created = format.parse(createdAt)
-		def date = new Date()
-
-		def days = 0
-
-		use(groovy.time.TimeCategory) {
-			def duration = date - created
-			days = duration.days
-		}
-		return days
 	}
 
 	def trustscore(reviews) {
-		
+
 		try {
-			
+
 			def sum = 0
 			def div = 0
 
@@ -51,7 +58,7 @@ class TrustScore {
 				def weight =  (365-days)
 
 				if(weight > 0) {
-					sum += (stars * weight)
+					sum += (starToNum[stars-1] * weight)
 					div += weight
 					i++
 				}
@@ -78,9 +85,9 @@ class TrustScore {
 	}
 
 	def getReviews(url) {
-		
+
 		logger?.log("Go get url: $url")
-		
+
 		try {
 			def slurper = new JsonSlurper()
 
@@ -94,7 +101,7 @@ class TrustScore {
 			if(reviews.size() < 300) {
 				resultReviews.links.each {
 					if(it.rel=='next-page') {
-						
+
 						getReviews(it.href) //recursive
 					}
 				}
@@ -105,53 +112,52 @@ class TrustScore {
 	}
 
 	def double calcTrustscore(String domain) {
-		
-		logger?.log("Start this request for domain: $domain")	
-		
+
+		logger?.log("Start this request for domain: $domain")
+
 		def id = getId(domain)
-		
+
 		logger?.log("Got id: $id")
-		
-		getReviews("https://api.trustpilot.com/v1/business-units/${id}/reviews?orderBy=createdAt.desc")
-		
-		def cnt = reviews.size()		
+
+		getReviews("https://api.trustpilot.com/v1/business-units/${id}/reviews?orderBy=createdAt.desc&perPage=100")
+
+		def cnt = reviews.size()
 		logger?.log("Got reviews: ${cnt}")
-		
+
 		if(reviews.size()==0) {
 			throw new Exception("No reviews to base trustscore on for domain: $domain")
 		}
-		
+
 		double score = trustscore(reviews)
 		logger?.log("The score is: $score")
-		
-		
+
+
 		return score
 	}
-	
+
 	def double handler(Map<String,Object> input, Context context) {
 		logger = context?.getLogger()
-		
+
 		def domain = input.domain
-		
+
 		if(domain == "")
 			throw new Exception("Domain parameter not set!")
-		
+
 		def score = new TrustScore().calcTrustscore(domain)
-		
+
 		return score
-		
 	}
 
 	def static main(args) {
 		//test local
 		println new TrustScore().handler([domain: 'trustpilot.com'], null)
-		
+
 		//test the service
 		def slurper = new JsonSlurper()
 		def json = "https://822qlg4tye.execute-api.us-west-2.amazonaws.com/prod/TrustPilotScore?domain=trustpilot.com".toURL().getText()
 		def result = slurper.parseText(json)
 		println result.TrustScore
-		
-		
+
+
 	}
 }
