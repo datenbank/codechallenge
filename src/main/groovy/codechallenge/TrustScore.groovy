@@ -49,8 +49,6 @@ class TrustScore {
 			def sum = 0
 			def div = 0
 
-			def i = 0
-
 			reviews.each {
 
 				def stars = it[0]
@@ -60,7 +58,6 @@ class TrustScore {
 				if(weight > 0) {
 					sum += (starToNum[stars-1] * weight)
 					div += weight
-					i++
 				}
 			}
 			Double rate = sum / div
