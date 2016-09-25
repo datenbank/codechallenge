@@ -9,7 +9,7 @@ call it with the domain paramter.
 
     ?domain=trustpilot.com
 
-The Service will get the latest 300 reviews, and make a weigthed average where most recent will affect the score more than older reviews. Reviews decline in importance as time goes and after 365 days the review will not affect the score anymore.
+The Service will get the latest 300 reviews, and make a weighted average where most recent will affect the score more than older reviews. Reviews decline in importance as time goes and after 365 days the review will not affect the score anymore. Reviews made today will have a factor of 365, and reviews made a day ago will have a factor of 364 and so on until the reivew isn't considered anymore after 365 days. 
 
 Results returned is with HTTP Response code 200
 
