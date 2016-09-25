@@ -14,7 +14,7 @@ The Service will get the latest 300 reviews, and make a weighted average. The mo
 Results returned with a HTTP Response success code 200 is
 
     {
-    "TrustScore": 3.8
+    "TrustScore": 6.9
     }
     
 But if an error accour a HTTP Response code 500 is returned. Here is example output of an error
