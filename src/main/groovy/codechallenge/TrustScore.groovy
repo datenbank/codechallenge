@@ -58,10 +58,10 @@ class TrustScore {
 				if(weight > 0) {
 					sum += (starToNum[stars-1] * weight)
 					div += weight
+
 				}
 			}
 			Double rate = sum / div
-
 			def rateRound = rate.round(1)
 
 			return rateRound
@@ -82,7 +82,7 @@ class TrustScore {
 	}
 
 	def getReviews(url) {
-
+		
 		logger?.log("Go get url: $url")
 
 		try {
