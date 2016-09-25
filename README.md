@@ -17,7 +17,7 @@ Results returned is with HTTP Response code 200
     "TrustScore": 3.8
     }
     
-But if an error accour the following is returned with a HTTP Response code 500
+But if an error accour a HTTP Response code 500 is returned. Here is example output
 
     {"errorMessage":"Domain parameter not set!","errorType":"java.lang.Exception",
     "stackTrace":["sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)"
