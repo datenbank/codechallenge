@@ -1,6 +1,6 @@
 # codechallenge
 
-The service is deployed here (only accessed by HTTP GET):
+The service is deployed here (only accept HTTP GET requests):
 
 [https://822qlg4tye.execute-api.us-west-2.amazonaws.com/prod/TrustPilotScore?domain=trustpilot.com](https://822qlg4tye.execute-api.us-west-2.amazonaws.com/prod/TrustPilotScore?domain=trustpilot.com)
 
@@ -9,15 +9,15 @@ call it with the domain paramter.
 
     ?domain=trustpilot.com
 
-The Service will get the latest 300 reviews, and make a weighted average where most recent will affect the score more than older reviews. Reviews decline in importance as time goes and after 365 days the review will not affect the score anymore. Reviews made today will have a factor of 365, and reviews made a day ago will have a factor of 364 and so on until the reivew isn't considered anymore after 365 days. 
+The Service will get the latest 300 reviews, and make a weighted average. The most recent will affect the score more than older reviews. Reviews decline in importance as time goes, and after 365 days the review will not affect the score anymore. Reviews made today will have a factor of 365, and reviews made a day ago will have a factor of 364, and so on until the reivew isn't considered anymore after 365 days. 
 
-Results returned is with HTTP Response code 200
+Results returned with a HTTP Response success code 200 is
 
     {
     "TrustScore": 3.8
     }
     
-But if an error accour a HTTP Response code 500 is returned. Here is example output
+But if an error accour a HTTP Response code 500 is returned. Here is example output of an error
 
     {"errorMessage":"Domain parameter not set!","errorType":"java.lang.Exception",
     "stackTrace":["sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)"
