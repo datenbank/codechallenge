@@ -1,6 +1,6 @@
 # codechallenge
 
-The service is deployed here:
+The service is deployed here (only accessed by HTTP GET):
 
 [https://822qlg4tye.execute-api.us-west-2.amazonaws.com/prod/TrustPilotScore?domain=trustpilot.com](https://822qlg4tye.execute-api.us-west-2.amazonaws.com/prod/TrustPilotScore?domain=trustpilot.com)
 
