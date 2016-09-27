@@ -43,11 +43,10 @@ class TrustScore {
 	}
 
 	def trustscore(reviews) {
-
+		def sum = 0
+		def div = 0
+		
 		try {
-
-			def sum = 0
-			def div = 0
 
 			reviews.each {
 
@@ -66,7 +65,10 @@ class TrustScore {
 
 			return rateRound
 		} catch(all) {
-			throw new Exception("Error calculating trustscore on reviews.")
+			if(div==0 && sum == 0 && reviews.size() > 0)
+				throw new Exception("No reviews within 365 days.")
+			else
+				throw new Exception("Error calculating trustscore on reviews.")
 		}
 	}
 
